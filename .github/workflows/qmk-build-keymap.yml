@@ -1,0 +1,44 @@
+name: Build XD75 Firmware (Latest QMK)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your repo
+        uses: actions/checkout@v4
+
+      - name: Install QMK dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip gcc-avr binutils-avr avr-libc dfu-programmer dfu-util
+
+      - name: Install QMK CLI
+        run: |
+          python3 -m pip install qmk
+
+      - name: Clone latest QMK firmware
+        run: |
+          git clone https://github.com/qmk/qmk_firmware.git --depth=1
+
+      - name: Copy your keymap into QMK
+        run: |
+          rm -rf qmk_firmware/keyboards/xiudi/xd75/keymaps/AdemIngham
+          mkdir -p qmk_firmware/keyboards/xiudi/xd75/keymaps/AdemIngham
+          cp -r keymaps/xiudi/xd75/keymaps/AdemIngham/* qmk_firmware/keyboards/xiudi/xd75/keymaps/AdemIngham/
+
+      - name: Build firmware
+        working-directory: qmk_firmware
+        run: |
+          qmk compile -kb xiudi/xd75 -km AdemIngham
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xd75-firmware
+          path: qmk_firmware/*.hex
