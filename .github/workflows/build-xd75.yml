@@ -24,10 +24,6 @@ jobs:
         run: |
           python3 -m pip install qmk
 
-      - name: Install QMK_KeymapToAsciiTable
-        run: |
-          python3 -m pip install QMK_KeymapToAsciiTable
-
       - name: Clone latest QMK firmware
         run: |
           git clone https://github.com/qmk/qmk_firmware.git --depth=1
@@ -43,10 +39,15 @@ jobs:
         run: |
           qmk compile -kb xiudi/xd75 -km ademingham
 
+      - name: Download QMK_KeymapToAsciiTable
+        run: |
+          curl -L https://raw.githubusercontent.com/SeungheonOh/QMK_KeymapToAsciiTable/master/QMK_KeymapToAsciiTable.py -o QMK_KeymapToAsciiTable.py
+
       - name: Generate ASCII table
         run: |
           mkdir -p ascii_output
-          QMK_KeymapToAsciiTable --keyboard xiudi/xd75 --keymap ademingham > ascii_output/xd75_ascii.txt
+          python3 QMK_KeymapToAsciiTable.py qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/keymap.c
+          cp comment.txt ascii_output/xd75_ascii.txt
 
       - name: Commit ASCII table back to repo
         run: |
