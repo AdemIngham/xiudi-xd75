@@ -1,0 +1,105 @@
+name: Build XD75 Firmware (Latest QMK + Auto Release + ASCII Table)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install QMK dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3 python3-pip gcc-avr binutils-avr avr-libc dfu-programmer dfu-util
+
+      - name: Install QMK CLI
+        run: |
+          python3 -m pip install qmk
+
+      - name: Install QMK_KeymapToAsciiTable
+        run: |
+          python3 -m pip install QMK_KeymapToAsciiTable
+
+      - name: Clone latest QMK firmware
+        run: |
+          git clone https://github.com/qmk/qmk_firmware.git --depth=1
+
+      - name: Copy your keymap into QMK
+        run: |
+          rm -rf qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham
+          mkdir -p qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham
+          cp -r keymaps/xiudi/xd75/keymaps/ademingham/* qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/
+
+      - name: Build firmware
+        working-directory: qmk_firmware
+        run: |
+          qmk compile -kb xiudi/xd75 -km ademingham
+
+      - name: Generate ASCII table
+        run: |
+          mkdir -p ascii_output
+          QMK_KeymapToAsciiTable --keyboard xiudi/xd75 --keymap ademingham > ascii_output/xd75_ascii.txt
+
+      - name: Commit ASCII table back to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          mkdir -p docs
+          cp ascii_output/xd75_ascii.txt docs/xd75_ascii.txt
+          git add docs/xd75_ascii.txt
+          git commit -m "Update ASCII table for latest build" || echo "No changes to commit"
+          git push
+
+      - name: Install c2json
+        run: |
+          python3 -m pip install c2json
+
+      - name: Generate JSON keymap
+        run: |
+          mkdir -p json_output
+          c2json qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/keymap.c > json_output/xd75_keymap.json
+
+      - name: Upload JSON keymap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xd75-keymap-json
+          path: json_output/xd75_keymap.json
+
+      - name: Install keymap-drawer
+        run: |
+          python3 -m pip install keymap-drawer
+
+      - name: Generate keymap SVG using keymap-drawer
+        run: |
+          mkdir -p keymap_output
+          keymap-drawer draw json_output/xd75_keymap.json > keymap_output/xd75_keymap.svg
+
+      - name: Upload keymap SVG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xd75-keymap-svg
+          path: keymap_output/xd75_keymap.svg
+
+      - name: Create version tag
+        run: |
+          DATE_TAG=$(date +'%Y.%m.%d')
+          COUNT=$(git tag -l "v${DATE_TAG}*" | wc -l)
+          TAG="v${DATE_TAG}-$((COUNT+1))"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: "XD75 Firmware ${{ env.TAG }}"
+          files: qmk_firmware/*.hex
