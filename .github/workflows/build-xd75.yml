@@ -3,115 +3,52 @@ on:
   push:
     branches: [ main, master ]
   pull_request:
-
+    paths:
+      - "keyboards/**/keymaps/**/keymap.c"
+      - "keyboards/**/keymaps/**/**.h"
+      - ".github/workflows/qmk-build.yml"
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Build QMK Keymap + JSON
 
     steps:
-      - name: Checkout your repo
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout QMK
-        uses: actions/checkout@v3
-        with:
-          repository: qmk/qmk_firmware
-          submodules: recursive
-          path: qmk_firmware
 
       - name: Install QMK dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3 python3-pip gcc-avr binutils-avr avr-libc dfu-programmer dfu-util
+          sudo apt install -y python3-pip gcc-avr binutils-avr avr-libc dfu-programmer dfu-util
 
-      - name: Install QMK CLI
+      - name: Install QMK
         run: |
-          python3 -m pip install qmk
+          pip3 install qmk
 
-      - name: Cache pip packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Cache QMK build
-        uses: actions/cache@v4
-        with:
-          path: qmk_firmware/.build
-          key: qmk-build-${{ github.sha }}
-          restore-keys: |
-            qmk-build-
-
-      - name: Copy your keymap into QMK
+      - name: Setup QMK
         run: |
-          rm -rf qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham
-          mkdir -p qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham
-          cp -r keymaps/xiudi/xd75/keymaps/ademingham/* qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/
+          qmk setup -y .
 
       - name: Build firmware
-        working-directory: qmk_firmware
         run: |
-          qmk compile -kb xiudi/xd75 -km ademingham
+          qmk compile -kb <keyboard> -km <keymap>
 
-      - name: Download QMK_KeymapToAsciiTable
-        continue-on-error: true
+      - name: Generate keymap JSON
         run: |
-          curl -L https://raw.githubusercontent.com/SeungheonOh/QMK_KeymapToAsciiTable/master/QMK_KeymapToAsciiTable.py -o QMK_KeymapToAsciiTable.py
+          qmk c2json --no-ccp \
+            -kb <keyboard> \
+            -km <keymap> \
+            -o <keyboard>_<keymap>.json
 
-      - name: Generate ASCII table
-        continue-on-error: true
-        run: |
-          mkdir -p ascii_output
-          python3 QMK_KeymapToAsciiTable.py qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/keymap.c
-          cp comment.txt ascii_output/xd75_ascii.txt
-
-      - name: Upload ASCII table artifact
-        continue-on-error: true
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: xd75-ascii-table
-          path: ascii_output/xd75_ascii.txt
+          name: qmk-build
+          path: |
+            *.hex
+            *.bin
+            *.json
 
-
-      - name: Install c2json
-        continue-on-error: true
-        run: |
-          python3 -m pip install c2json
-
-      - name: Generate JSON keymap
-        continue-on-error: true
-        run: |
-          mkdir -p json_output
-          c2json qmk_firmware/keyboards/xiudi/xd75/keymaps/ademingham/keymap.c > json_output/xd75_keymap.json
-
-      - name: Upload JSON keymap artifact
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: xd75-keymap-json
-          path: json_output/xd75_keymap.json
-
-      - name: Install keymap-drawer
-        continue-on-error: true
-        run: |
-          python3 -m pip install keymap-drawer
-
-      - name: Generate keymap SVG using keymap-drawer
-        continue-on-error: true
-        run: |
-          mkdir -p keymap_output
-          keymap-drawer draw json_output/xd75_keymap.json > keymap_output/xd75_keymap.svg
-
-      - name: Upload keymap SVG artifact
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: xd75-keymap-svg
-          path: keymap_output/xd75_keymap.svg
 
       - name: Create version tag
         continue-on-error: true
@@ -122,11 +59,3 @@ jobs:
           echo "TAG=$TAG" >> $GITHUB_ENV
           git tag $TAG
           git push origin $TAG
-
-      - name: Create GitHub Release
-        continue-on-error: true
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.TAG }}
-          name: "XD75 Firmware ${{ env.TAG }}"
-          files: qmk_firmware/*.hex
