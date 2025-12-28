@@ -1,16 +1,15 @@
-name: Build XD75 Firmware (Latest QMK + Auto Release + ASCII Table)
+name: Build QMK Keymap + JSON
+
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
     paths:
       - "keyboards/**/keymaps/**/keymap.c"
       - "keyboards/**/keymaps/**/**.h"
       - ".github/workflows/qmk-build.yml"
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build QMK Keymap + JSON
 
     steps:
       - name: Checkout repository
@@ -25,9 +24,10 @@ jobs:
         run: |
           pip3 install qmk
 
-      - name: Setup QMK
+      - name: Configure QMK environment
         run: |
-          qmk setup -y .
+          export QMK_HOME="$GITHUB_WORKSPACE"
+          qmk config user.qmk_home="$QMK_HOME"
 
       - name: Build firmware
         run: |
@@ -48,14 +48,3 @@ jobs:
             *.hex
             *.bin
             *.json
-
-
-      - name: Create version tag
-        continue-on-error: true
-        run: |
-          DATE_TAG=$(date +'%Y.%m.%d')
-          COUNT=$(git tag -l "v${DATE_TAG}*" | wc -l)
-          TAG="v${DATE_TAG}-$((COUNT+1))"
-          echo "TAG=$TAG" >> $GITHUB_ENV
-          git tag $TAG
-          git push origin $TAG
