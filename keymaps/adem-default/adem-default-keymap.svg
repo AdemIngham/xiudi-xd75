@@ -135,8 +135,8 @@ text.trans { fill: #7e8184; }
 path.combo { stroke: #7f7f7f; }
 
 }</style>
-<g transform="translate(30, 0)" class="layer-L0">
-<text x="0" y="28" class="label" id="L0">L0:</text>
+<g transform="translate(30, 0)" class="layer-Base (L0)">
+<text x="0" y="28" class="label" id="Base-L0">Base (L0):</text>
 <g transform="translate(0, 56)">
 <g transform="translate(28, 28)" class="key keypos-0">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -408,9 +408,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 <g transform="translate(420, 252)" class="key keypos-67">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L1">
-<text x="0" y="0" class="key tap layer-activator">L1</text>
-</a></g>
+<text x="0" y="0" class="key tap">L1</text>
+</g>
 <g transform="translate(476, 252)" class="key keypos-68">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">APP</text>
@@ -421,15 +420,13 @@ path.combo { stroke: #7f7f7f; }
 </g>
 <g transform="translate(588, 252)" class="key keypos-70">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L2">
-<text x="0" y="0" class="key tap layer-activator">L2</text>
-</a><text x="0" y="24" class="key hold">toggle</text>
+<text x="0" y="0" class="key tap">L2</text>
+<text x="0" y="24" class="key hold">toggle</text>
 </g>
 <g transform="translate(644, 252)" class="key keypos-71">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L3">
-<text x="0" y="0" class="key tap layer-activator">L3</text>
-</a><text x="0" y="24" class="key hold">toggle</text>
+<text x="0" y="0" class="key tap">L3</text>
+<text x="0" y="24" class="key hold">toggle</text>
 </g>
 <g transform="translate(700, 252)" class="key keypos-72">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -445,8 +442,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 </g>
 </g>
-<g transform="translate(30, 336)" class="layer-L1">
-<text x="0" y="28" class="label" id="L1">L1:</text>
+<g transform="translate(30, 336)" class="layer-FN (L1)">
+<text x="0" y="28" class="label" id="FN-L1">FN (L1):</text>
 <g transform="translate(0, 56)">
 <g transform="translate(28, 28)" class="key keypos-0">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -632,9 +629,9 @@ path.combo { stroke: #7f7f7f; }
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
 <text x="0" y="0" class="key trans tap">▽</text>
 </g>
-<g transform="translate(84, 196)" class="key trans keypos-46">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
-<text x="0" y="0" class="key trans tap">▽</text>
+<g transform="translate(84, 196)" class="key keypos-46">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
+<text x="0" y="0" class="key tap">\</text>
 </g>
 <g transform="translate(140, 196)" class="key trans keypos-47">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
@@ -723,9 +720,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 <g transform="translate(476, 252)" class="key keypos-68">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L4">
-<text x="0" y="0" class="key tap layer-activator">L4</text>
-</a><text x="0" y="24" class="key hold">toggle</text>
+<text x="0" y="0" class="key tap">L4</text>
+<text x="0" y="24" class="key hold">toggle</text>
 </g>
 <g transform="translate(532, 252)" class="key trans keypos-69">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
@@ -753,8 +749,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 </g>
 </g>
-<g transform="translate(30, 672)" class="layer-L2">
-<text x="0" y="28" class="label" id="L2">L2:</text>
+<g transform="translate(30, 672)" class="layer-WinLock (L2)">
+<text x="0" y="28" class="label" id="WinLock-L2">WinLock (L2):</text>
 <g transform="translate(0, 56)">
 <g transform="translate(28, 28)" class="key trans keypos-0">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
@@ -1057,8 +1053,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 </g>
 </g>
-<g transform="translate(30, 1008)" class="layer-L3">
-<text x="0" y="28" class="label" id="L3">L3:</text>
+<g transform="translate(30, 1008)" class="layer-Numpad (L3)">
+<text x="0" y="28" class="label" id="Numpad-L3">Numpad (L3):</text>
 <g transform="translate(0, 56)">
 <g transform="translate(28, 28)" class="key trans keypos-0">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
@@ -1360,8 +1356,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 </g>
 </g>
-<g transform="translate(30, 1344)" class="layer-L4">
-<text x="0" y="28" class="label" id="L4">L4:</text>
+<g transform="translate(30, 1344)" class="layer-System (L4)">
+<text x="0" y="28" class="label" id="System-L4">System (L4):</text>
 <g transform="translate(0, 56)">
 <g transform="translate(28, 28)" class="key keypos-0">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -1587,9 +1583,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 <g transform="translate(28, 252)" class="key keypos-60">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L0">
-<text x="0" y="0" class="key tap layer-activator">L0</text>
-</a><text x="0" y="24" class="key hold">toggle</text>
+<text x="0" y="0" class="key tap">L0</text>
+<text x="0" y="24" class="key hold">toggle</text>
 </g>
 <g transform="translate(84, 252)" class="key keypos-61">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -1614,9 +1609,8 @@ path.combo { stroke: #7f7f7f; }
 </g>
 <g transform="translate(476, 252)" class="key keypos-68">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#L4">
-<text x="0" y="0" class="key tap layer-activator">L4</text>
-</a><text x="0" y="24" class="key hold">toggle</text>
+<text x="0" y="0" class="key tap">L4</text>
+<text x="0" y="24" class="key hold">toggle</text>
 </g>
 <g transform="translate(532, 252)" class="key keypos-69">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
